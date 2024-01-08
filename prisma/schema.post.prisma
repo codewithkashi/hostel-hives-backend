@@ -1,0 +1,45 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model hostel {
+    id           String        @id @default(uuid())
+    created_at   DateTime      @default(now())
+    users        user[]
+    transactions transaction[]
+}
+
+model user {
+    id             Int           @id @default(autoincrement())
+    name           String
+    email          String        @unique
+    password       String
+    balance        Int           @default(0)
+    status         String        @default("P")
+    hostel_id      String
+    hostel_details hostel        @relation(fields: [hostel_id], references: [id])
+    is_admin       Boolean       @default(false)
+    created_at     DateTime      @default(now())
+    transaction    transaction[]
+}
+
+model transaction {
+    id                       Int      @id @default(autoincrement())
+    items                    String?
+    amount                   Int
+    transaction_by           Int
+    included_users           Int[]
+    per_head                 Int      @default(0)
+    created_at               DateTime @default(now())
+    hostel_id                String
+    hostel_details           hostel   @relation(fields: [hostel_id], references: [id])
+    trasnaction_user_detials user     @relation(fields: [transaction_by], references: [id])
+}
