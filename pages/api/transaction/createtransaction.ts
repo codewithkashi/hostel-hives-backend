@@ -42,7 +42,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       },
       data: {
         balance: {
-          increment: trnasaction.per_head,
+          increment: amount - trnasaction.per_head,
         },
       },
     });
